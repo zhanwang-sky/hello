@@ -47,4 +47,52 @@ func main() {
 	}
 
 	fmt.Println()
+
+	// Slices
+	fmt.Println("Slices:")
+
+	var s1 []int
+	fmt.Printf("s1: %v, is nil? %v, len=%d\n", s1, s1 == nil, len(s1))
+
+	s1 = make([]int, 3)
+	fmt.Println("> s1 = make([]int, 3)")
+	fmt.Printf("s1: %v, len=%d, cap=%d\n", s1, len(s1), cap(s1))
+
+	s1 = make([]int, 3, 5)
+	fmt.Println("> s1 = make([]int, 3, 5)")
+	fmt.Printf("s1: %v, len=%d, cap=%d\n", s1, len(s1), cap(s1))
+
+	s1[len(s1)-1] = -2
+	s1 = append(s1, 3)
+	fmt.Println("> s1[len(s1)-1] = -2")
+	fmt.Println("> s1 = append(s1, 3)")
+	fmt.Printf("s1: %v, len=%d, cap=%d\n", s1, len(s1), cap(s1))
+
+	s1 = append(s1, 4, 5)
+	fmt.Println("> s1 = append(s1, 4, 5)")
+	fmt.Printf("s1: %v, len=%d, cap=%d\n", s1, len(s1), cap(s1))
+
+	s2 := make([]int, len(s1))
+	copy(s2, s1)
+	fmt.Println("s2 is the (deep) copy of s1:", s2)
+
+	s3 := s2[2:4]
+	fmt.Println("s3 is the slice (shallow copy) of s2:", s3)
+
+	s2[2] = -s2[2]
+	fmt.Println("> s2[2] = -s2[2]")
+	fmt.Println("s3:", s3)
+
+	s4 := []int{1, 2, 3, 4}
+	fmt.Println("s4:", s4)
+
+	s5 := s4[:3]
+	fmt.Println("> s5 := s4[:3]")
+	fmt.Println("s5:", s5)
+
+	s5 = append(s5, 5)
+	fmt.Println("> s5 = append(s5, 5)")
+	fmt.Printf("s4: %v, s5: %v\n", s4, s5)
+
+	fmt.Println()
 }
