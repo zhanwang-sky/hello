@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"maps"
 	"math"
+	"slices"
 
 	"github.com/zhanwang-sky/greetings"
 )
@@ -75,6 +77,11 @@ func main() {
 	s2 := make([]int, len(s1))
 	copy(s2, s1)
 	fmt.Println("s2 is the (deep) copy of s1:", s2)
+	if slices.Equal(s1, s2) {
+		fmt.Println("s1==s2")
+	} else {
+		fmt.Println("s1!=s2")
+	}
 
 	s3 := s2[2:4]
 	fmt.Println("s3 is the slice (shallow copy) of s2:", s3)
@@ -93,6 +100,47 @@ func main() {
 	s5 = append(s5, 5)
 	fmt.Println("> s5 = append(s5, 5)")
 	fmt.Printf("s4: %v, s5: %v\n", s4, s5)
+
+	fmt.Println()
+
+	// Maps
+	fmt.Println("Maps:")
+
+	var m map[string]int
+	fmt.Println("> var m map[string]int")
+	fmt.Printf("m: %v, m is nil? %v\n", m, m == nil)
+
+	m = make(map[string]int)
+	fmt.Println("> m = make(map[string]int)")
+	fmt.Printf("m: %v, m is nil? %v\n", m, m == nil)
+
+	m["1"] = '1'
+	m["a"] = 'a'
+	fmt.Printf("m: %v, len(m)=%d\n", m, len(m))
+
+	delete(m, "a")
+	fmt.Println("> delete(m, \"a\")")
+	fmt.Printf("m: %v, len(m)=%d\n", m, len(m))
+	delete(m, "b")
+	fmt.Println("> delete(m, \"b\")")
+	fmt.Printf("m: %v, len(m)=%d\n", m, len(m))
+	clear(m)
+	fmt.Println("> clear(m)")
+	fmt.Printf("m: %v, len(m)=%d\n", m, len(m))
+
+	_, prs := m["foo"]
+	fmt.Println("is \"prs\" exists?", prs)
+	fmt.Println("map[\"key\"] will not create \"key\" automatically!")
+	fmt.Printf("m: %v, len(m)=%d\n", m, len(m))
+
+	m1 := map[string]int{"foo": 1, "bar": 2}
+	m2 := map[string]int{"bar": 2, "foo": 1}
+	fmt.Printf("m1: %v, m2: %v\n", m1, m2)
+	if maps.Equal(m1, m2) {
+		fmt.Println("m1==m2")
+	} else {
+		fmt.Println("m1!=m2")
+	}
 
 	fmt.Println()
 }
