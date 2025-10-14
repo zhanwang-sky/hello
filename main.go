@@ -143,4 +143,23 @@ func main() {
 	}
 
 	fmt.Println()
+
+	// Functions
+	fmt.Println("Functions:")
+
+	accTimes := 0
+	acc := func(nums ...int) (int, int) {
+		var sum int
+		for _, n := range nums {
+			sum += n
+		}
+		accTimes++
+		return sum * accTimes, accTimes
+	}
+
+	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	fmt.Println(acc(nums...))
+	fmt.Println(acc(nums...))
+
+	fmt.Println()
 }
