@@ -5,6 +5,7 @@ import (
 	"maps"
 	"math"
 	"slices"
+	"unicode/utf8"
 
 	"github.com/zhanwang-sky/greetings"
 )
@@ -160,6 +161,27 @@ func main() {
 	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	fmt.Println(acc(nums...))
 	fmt.Println(acc(nums...))
+
+	fmt.Println()
+
+	// Strings and Runes
+	fmt.Println("Strings and Runes:")
+
+	hello := "你好！"
+	fmt.Println("length of hello in bytes:", len(hello))
+	fmt.Println("length of hello in Runes:", utf8.RuneCountInString(hello))
+
+	fmt.Println("Iterate through 'hello':")
+	for idx, runeValue := range hello {
+		fmt.Printf("%#U starts at %d\n", runeValue, idx)
+	}
+
+	fmt.Println("Using DecodeRuneInString:")
+	for i := 0; i < len(hello); {
+		runeValue, width := utf8.DecodeRuneInString(hello[i:])
+		fmt.Printf("%#U starts at %d\n", runeValue, i)
+		i += width
+	}
 
 	fmt.Println()
 }
