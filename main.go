@@ -13,6 +13,35 @@ import (
 const modName string = "hello"
 const pi = 3.1415926
 
+type geometry interface {
+	area() float64
+	perim() float64
+}
+
+type rect struct {
+	width, height float64
+}
+
+type circle struct {
+	radius float64
+}
+
+func (r *rect) area() float64 {
+	return r.width * r.height
+}
+
+func (r *rect) perim() float64 {
+	return 2*r.width + 2*r.height
+}
+
+func (c circle) area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+
+func (c circle) perim() float64 {
+	return 2 * math.Pi * c.radius
+}
+
 func main() {
 	// Values & Variables
 	fmt.Println("Values & Variables:")
@@ -181,6 +210,36 @@ func main() {
 		runeValue, width := utf8.DecodeRuneInString(hello[i:])
 		fmt.Printf("%#U starts at %d\n", runeValue, i)
 		i += width
+	}
+
+	fmt.Println()
+
+	// Structs, Methods and Interfaces
+	fmt.Println("Structs, Methods and Interfaces:")
+
+	cir := circle{1.1}
+	rec := rect{height: 4, width: 3}
+
+	var g geometry
+
+	g = cir
+	if _, ok := g.(circle); ok {
+		fmt.Println("g has type circle, g.area:", g.area())
+		fmt.Println("g has type circle, g.perim:", g.perim())
+	}
+
+	g = &cir
+	if _, ok := g.(*circle); ok {
+		fmt.Println("g has type *circle, (*g).area:", g.area())
+		fmt.Println("g has type *circle, (*g).perim:", g.perim())
+	}
+
+	// g = rec // rect does not define value receiver!
+
+	g = &rec
+	if _, ok := g.(*rect); ok {
+		fmt.Println("g has type *rect, (*g).area:", g.area())
+		fmt.Println("g has type *rect, (*g).perim:", g.perim())
 	}
 
 	fmt.Println()
