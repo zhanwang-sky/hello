@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"iter"
 	"maps"
 	"math"
 	"slices"
@@ -63,6 +64,35 @@ func (st JBState) String() string {
 		return "wait_key_frame"
 	default:
 		return "unknown"
+	}
+}
+
+type listNode[T any] struct {
+	next *listNode[T]
+	val  T
+}
+
+type List[T any] struct {
+	head, tail *listNode[T]
+}
+
+func (ls *List[T]) Push(val T) {
+	if ls.tail == nil {
+		ls.tail = &listNode[T]{val: val}
+		ls.head = ls.tail
+	} else {
+		ls.tail.next = &listNode[T]{val: val}
+		ls.tail = ls.tail.next
+	}
+}
+
+func (ls *List[T]) Seq() iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for curr := ls.head; curr != nil; curr = curr.next {
+			if !yield(curr.val) {
+				return
+			}
+		}
 	}
 }
 
@@ -273,6 +303,33 @@ func main() {
 
 	st := JBPolling
 	fmt.Println("st:", st)
+
+	fmt.Println()
+
+	// Generics and Range over Iterators
+	fmt.Println("Generics and Range over Iterators:")
+
+	var ls List[int]
+	ls.Push(1)
+	ls.Push(2)
+	ls.Push(3)
+	ls.Push(4)
+	ls.Push(5)
+	ls.Push(6)
+	ls.Push(7)
+
+	fmt.Println("iterate ls (with type List[int]):")
+	for val := range ls.Seq() {
+		fmt.Printf("%d ", val)
+	}
+	fmt.Println()
+
+	pls := &ls
+	fmt.Println("iterate pls (with type *List[int]):")
+	for val := range pls.Seq() {
+		fmt.Printf("%d ", val)
+	}
+	fmt.Println()
 
 	fmt.Println()
 }
