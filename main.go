@@ -42,6 +42,30 @@ func (c circle) perim() float64 {
 	return 2 * math.Pi * c.radius
 }
 
+type JBState uint8
+
+const (
+	JBPolling JBState = iota
+	JBDecoding
+	JBTimedout
+	JBWaitKeyFrame
+)
+
+func (st JBState) String() string {
+	switch st {
+	case JBPolling:
+		return "polling"
+	case JBDecoding:
+		return "decoding"
+	case JBTimedout:
+		return "timed_out"
+	case JBWaitKeyFrame:
+		return "wait_key_frame"
+	default:
+		return "unknown"
+	}
+}
+
 func main() {
 	// Values & Variables
 	fmt.Println("Values & Variables:")
@@ -241,6 +265,14 @@ func main() {
 		fmt.Println("g has type *rect, (*g).area:", g.area())
 		fmt.Println("g has type *rect, (*g).perim:", g.perim())
 	}
+
+	fmt.Println()
+
+	// Enums
+	fmt.Println("Enums:")
+
+	st := JBPolling
+	fmt.Println("st:", st)
 
 	fmt.Println()
 }
