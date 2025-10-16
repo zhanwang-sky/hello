@@ -6,6 +6,7 @@ import (
 	"maps"
 	"math"
 	"slices"
+	"time"
 	"unicode/utf8"
 
 	"github.com/zhanwang-sky/greetings"
@@ -330,6 +331,32 @@ func main() {
 		fmt.Printf("%d ", val)
 	}
 	fmt.Println()
+
+	fmt.Println()
+
+	// Channels
+	fmt.Println("Channels:")
+
+	ch := make(chan string)
+
+	go func() {
+		fmt.Println("waiting for channel message...")
+
+		fmt.Printf("processing channel message '%v'...\n", <-ch)
+		time.Sleep(time.Second)
+
+		fmt.Println("done")
+		ch <- "done"
+	}()
+
+	fmt.Println("sleep for 1 sec...")
+	time.Sleep(time.Second)
+
+	fmt.Println("produce 'hahaha'")
+	ch <- "hahaha"
+
+	fmt.Println("wait goroutine to exit...")
+	<-ch
 
 	fmt.Println()
 }
