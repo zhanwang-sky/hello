@@ -343,20 +343,57 @@ func main() {
 		fmt.Println("waiting for channel message...")
 
 		fmt.Printf("processing channel message '%v'...\n", <-ch)
-		time.Sleep(time.Second)
+		time.Sleep(100 * time.Millisecond)
 
 		fmt.Println("done")
 		ch <- "done"
 	}()
 
-	fmt.Println("sleep for 1 sec...")
-	time.Sleep(time.Second)
+	fmt.Println("sleep for 100 ms...")
+	time.Sleep(100 * time.Millisecond)
 
 	fmt.Println("produce 'hahaha'")
 	ch <- "hahaha"
 
 	fmt.Println("wait goroutine to exit...")
 	<-ch
+
+	fmt.Println()
+
+	// Select
+	fmt.Println("Select:")
+
+	ch1 := make(chan string, 1)
+
+	// res1 after 200ms
+	go func() {
+		time.Sleep(200 * time.Millisecond)
+		ch1 <- "res1"
+	}()
+
+	fmt.Print("select 1 > ")
+	select {
+	case res1 := <-ch1:
+		fmt.Println("result 1:", res1)
+	case <-time.After(100 * time.Millisecond):
+		fmt.Println("timeout 1")
+	}
+
+	ch2 := make(chan string, 1)
+
+	// res2 after 200ms
+	go func() {
+		time.Sleep(200 * time.Millisecond)
+		ch2 <- "res2"
+	}()
+
+	fmt.Print("select 2 > ")
+	select {
+	case res2 := <-ch2:
+		fmt.Println("result 2:", res2)
+	case <-time.After(300 * time.Millisecond):
+		fmt.Println("timeout 2")
+	}
 
 	fmt.Println()
 }
