@@ -6,6 +6,7 @@ import (
 	"maps"
 	"math"
 	"slices"
+	"sync"
 	"time"
 	"unicode/utf8"
 
@@ -434,6 +435,26 @@ func main() {
 	tickDone <- true
 	// wait goroutine to exit
 	time.Sleep(100 * time.Millisecond)
+
+	fmt.Println()
+
+	// WaitGroups
+	fmt.Println("WaitGroups:")
+
+	var wg sync.WaitGroup
+
+	worker := func(id int) {
+		fmt.Println("worker", id, " started")
+		time.Sleep(10 * time.Millisecond)
+		fmt.Println("worker", id, " done")
+	}
+
+	for i := range 5 {
+		wg.Go(func() { worker(i) })
+	}
+
+	wg.Wait()
+	fmt.Println("all done")
 
 	fmt.Println()
 }
