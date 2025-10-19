@@ -396,4 +396,44 @@ func main() {
 	}
 
 	fmt.Println()
+
+	// Timers and Tickers
+	fmt.Println("Timers and Tickers:")
+
+	tim1 := time.NewTimer(50 * time.Millisecond)
+
+	go func() {
+		<-tim1.C
+		fmt.Println("tim1 fired")
+	}()
+
+	time.Sleep(100 * time.Millisecond)
+
+	if tim1.Stop() {
+		fmt.Println("tim1 successfully stopped")
+	}
+
+	tick1 := time.NewTicker(100 * time.Millisecond)
+	tickDone := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case t := <-tick1.C:
+				fmt.Println("tick1 ticks at", t)
+			case <-tickDone:
+				return
+			}
+		}
+	}()
+
+	time.Sleep(600 * time.Millisecond)
+
+	// notify goroutine to exit
+	tick1.Stop()
+	tickDone <- true
+	// wait goroutine to exit
+	time.Sleep(100 * time.Millisecond)
+
+	fmt.Println()
 }
