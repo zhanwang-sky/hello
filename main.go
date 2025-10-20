@@ -8,6 +8,7 @@ import (
 	"math"
 	"slices"
 	"sync"
+	"sync/atomic"
 	"time"
 	"unicode/utf8"
 
@@ -97,6 +98,29 @@ func (ls *List[T]) Seq() iter.Seq[T] {
 			}
 		}
 	}
+}
+
+func atomicCounters() {
+	fmt.Println("Atomic Counters:")
+
+	var ops atomic.Uint32
+	var wg sync.WaitGroup
+
+	fmt.Println("spawn 50 goroutines...")
+
+	for range 50 {
+		wg.Go(func() {
+			for range 1000 {
+				ops.Add(1)
+			}
+		})
+	}
+
+	wg.Wait()
+
+	fmt.Println("done, ops =", ops.Load())
+
+	fmt.Println()
 }
 
 func sorting() {
@@ -498,6 +522,9 @@ func main() {
 	fmt.Println("all done")
 
 	fmt.Println()
+
+	// Atomic Counters
+	atomicCounters()
 
 	// Sorting
 	sorting()
