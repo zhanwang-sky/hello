@@ -120,6 +120,20 @@ func sorting() {
 	fmt.Println()
 }
 
+func handlePanic() {
+	fmt.Println("Handle Panic:")
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("recovered from error:", r)
+		}
+		fmt.Println()
+	}()
+
+	fmt.Println("raise panic...")
+	panic("WTF!")
+}
+
 func main() {
 	// Values & Variables
 	fmt.Println("Values & Variables:")
@@ -487,4 +501,7 @@ func main() {
 
 	// Sorting
 	sorting()
+
+	// Handle Panic
+	handlePanic()
 }
