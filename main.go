@@ -100,6 +100,17 @@ func (ls *List[T]) Seq() iter.Seq[T] {
 	}
 }
 
+type Container struct {
+	mu       sync.Mutex     // DO NOT copy!
+	counters map[string]int // SHOULD BE INITIALIZED!
+}
+
+func (c *Container) inc(name string) { // MUST BE pointer receiver!
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.counters[name]++
+}
+
 func atomicCounters() {
 	fmt.Println("Atomic Counters:")
 
@@ -118,7 +129,43 @@ func atomicCounters() {
 
 	wg.Wait()
 
-	fmt.Println("done, ops =", ops.Load())
+	fmt.Println("done, ops =", ops.Load()) // use .Load()
+
+	fmt.Println()
+}
+
+func mutexes() {
+	fmt.Println("Mutexes:")
+
+	var wg sync.WaitGroup
+
+	c := Container{
+		counters: map[string]int{"balabala": -1, "xx": 99},
+	}
+
+	doIncrement := func(name string, times int) {
+		for range times {
+			c.inc(name)
+		}
+	}
+
+	fmt.Println("before starting, c.counters:", c.counters)
+
+	fmt.Println("increase foo 500 times...")
+	wg.Go(func() { doIncrement("foo", 500) })
+
+	fmt.Println("increase bar 1000 times...")
+	wg.Go(func() { doIncrement("bar", 1000) })
+
+	fmt.Println("increase foo 1000 times...")
+	wg.Go(func() { doIncrement("foo", 1000) })
+
+	fmt.Println("increase balabala 70 times...")
+	wg.Go(func() { doIncrement("balabala", 70) })
+
+	wg.Wait()
+
+	fmt.Println("done, c.counters:", c.counters)
 
 	fmt.Println()
 }
@@ -525,6 +572,9 @@ func main() {
 
 	// Atomic Counters
 	atomicCounters()
+
+	// Mutexes
+	mutexes()
 
 	// Sorting
 	sorting()
