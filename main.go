@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"fmt"
 	"iter"
 	"maps"
@@ -96,6 +97,27 @@ func (ls *List[T]) Seq() iter.Seq[T] {
 			}
 		}
 	}
+}
+
+func sorting() {
+	fmt.Println("Sorting:")
+
+	ints := []int{-1, 8, 72, 99, 6, 13}
+	fmt.Println("ints:", ints)
+
+	fmt.Println("sorting...")
+	slices.Sort(ints)
+	fmt.Println("ints:", ints)
+	fmt.Println("IsSorted:", slices.IsSorted(ints))
+
+	reverseCmp := func(a, b int) int { return cmp.Compare(-a, -b) }
+
+	fmt.Println("sorting(reversed)...")
+	slices.SortFunc(ints, reverseCmp)
+	fmt.Println("ints(reversed):", ints)
+	fmt.Println("IsSorted(reversed):", slices.IsSortedFunc(ints, reverseCmp))
+
+	fmt.Println()
 }
 
 func main() {
@@ -462,4 +484,7 @@ func main() {
 	fmt.Println("all done")
 
 	fmt.Println()
+
+	// Sorting
+	sorting()
 }
