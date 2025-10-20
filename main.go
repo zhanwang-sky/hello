@@ -104,7 +104,12 @@ func main() {
 
 	fmt.Println("modName:", modName)
 	fmt.Printf("sin(π) = %.0f\n", math.Round(math.Sin(pi)))
-	fmt.Println(greetings.Hello("Jon Snow"))
+
+	if msg, err := greetings.Hello("Jon Snow"); err == nil {
+		fmt.Println(msg)
+	} else {
+		fmt.Println("error calling greetings.Hello():", err)
+	}
 
 	fmt.Println()
 
