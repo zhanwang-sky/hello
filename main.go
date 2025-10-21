@@ -13,6 +13,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/zhanwang-sky/greetings"
+	"github.com/zhanwang-sky/hello/exercises"
 )
 
 const modName string = "hello"
@@ -576,4 +577,27 @@ func main() {
 
 	// Panic, Defer and Recover
 	panicDeferRecover()
+
+	// Exercises
+	fmt.Println("Exercises:")
+
+	printNumber(7)
+	fmt.Println()
+}
+
+// Exercises
+
+func printNumber(n int) {
+	fmt.Printf("printNumber(%d): ", n)
+
+	z := exercises.NewZeroEvenOdd(n)
+
+	var wg sync.WaitGroup
+
+	wg.Go(func() { z.Zero() })
+	wg.Go(func() { z.Even() })
+	wg.Go(func() { z.Odd() })
+	wg.Wait()
+
+	fmt.Println()
 }
