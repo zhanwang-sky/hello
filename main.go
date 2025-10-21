@@ -102,13 +102,35 @@ func (ls *List[T]) Seq() iter.Seq[T] {
 
 type Container struct {
 	mu       sync.Mutex     // DO NOT copy!
-	counters map[string]int // SHOULD BE INITIALIZED!
+	counters map[string]int // SHOULD BE explicitly initialized!
 }
 
 func (c *Container) inc(name string) { // MUST BE pointer receiver!
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.counters[name]++
+}
+
+func waitGroups() {
+	fmt.Println("WaitGroups:")
+
+	var wg sync.WaitGroup // DO NOT copy!
+
+	worker := func(idx int) {
+		fmt.Println("worker", idx, "started")
+		time.Sleep(10 * time.Millisecond)
+		fmt.Println("worker", idx, "done")
+	}
+
+	fmt.Println("spawn 10 goroutines...")
+	for i := range 10 {
+		wg.Go(func() { worker(i) })
+	}
+
+	wg.Wait()
+	fmt.Println("all done")
+
+	fmt.Println()
 }
 
 func atomicCounters() {
@@ -191,8 +213,8 @@ func sorting() {
 	fmt.Println()
 }
 
-func handlePanic() {
-	fmt.Println("Handle Panic:")
+func panicDeferRecover() {
+	fmt.Println("Panic, Defer and Recover:")
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -551,24 +573,7 @@ func main() {
 	fmt.Println()
 
 	// WaitGroups
-	fmt.Println("WaitGroups:")
-
-	var wg sync.WaitGroup
-
-	worker := func(id int) {
-		fmt.Println("worker", id, " started")
-		time.Sleep(10 * time.Millisecond)
-		fmt.Println("worker", id, " done")
-	}
-
-	for i := range 5 {
-		wg.Go(func() { worker(i) })
-	}
-
-	wg.Wait()
-	fmt.Println("all done")
-
-	fmt.Println()
+	waitGroups()
 
 	// Atomic Counters
 	atomicCounters()
@@ -579,6 +584,6 @@ func main() {
 	// Sorting
 	sorting()
 
-	// Handle Panic
-	handlePanic()
+	// Panic, Defer and Recover
+	panicDeferRecover()
 }
