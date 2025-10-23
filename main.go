@@ -583,6 +583,9 @@ func main() {
 
 	printNumber(7)
 	fmt.Println()
+
+	lruCache()
+	fmt.Println()
 }
 
 // Exercises
@@ -598,6 +601,28 @@ func printNumber(n int) {
 	wg.Go(func() { z.Even() })
 	wg.Go(func() { z.Odd() })
 	wg.Wait()
+
+	fmt.Println()
+}
+
+func lruCache() {
+	fmt.Println("lruCache:")
+
+	fmt.Println("> LRUCache(2)")
+	lru := exercises.NewLRUCache(2)
+	fmt.Println("> put(1, 1)")
+	lru.Put(1, 1)
+	fmt.Println("> put(2, 2)")
+	lru.Put(2, 2)
+	fmt.Println("> get(1):", lru.Get(1))
+	fmt.Println("> put(3, 3)")
+	lru.Put(3, 3)
+	fmt.Println("> get(2):", lru.Get(2))
+	fmt.Println("> put(4, 4)")
+	lru.Put(4, 4)
+	fmt.Println("> get(1):", lru.Get(1))
+	fmt.Println("> get(3):", lru.Get(3))
+	fmt.Println("> get(4):", lru.Get(4))
 
 	fmt.Println()
 }
