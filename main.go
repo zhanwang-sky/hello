@@ -112,17 +112,19 @@ func (c *Container) inc(name string) { // MUST BE pointer receiver!
 	c.counters[name]++
 }
 
-func timersAndTickers() {
-	fmt.Println("Timers and Tickers:")
+func timerNticker() {
+	fmt.Println("Timer & Ticker:")
 
 	timer := time.NewTimer(50 * time.Millisecond)
 	ticker := time.NewTicker(8 * time.Millisecond)
+	var tickCnt atomic.Int32
 	allDone := make(chan bool)
 
 	go func() {
 		for {
 			select {
 			case t := <-ticker.C:
+				tickCnt.Add(1)
 				fmt.Println("tick at", t)
 			case <-timer.C:
 				fmt.Println("timer fired")
@@ -134,7 +136,7 @@ func timersAndTickers() {
 
 	<-allDone
 	ticker.Stop()
-	fmt.Println("all done")
+	fmt.Println("all done, tickCnt =", tickCnt.Load())
 
 	fmt.Println()
 }
@@ -267,6 +269,11 @@ func main() {
 	} else {
 		fmt.Println("error calling greetings.Hello():", err)
 	}
+
+	fmt.Println()
+
+	// Type Assert
+	fmt.Println("Type Assert")
 
 	fmt.Println()
 
@@ -560,8 +567,8 @@ func main() {
 
 	fmt.Println()
 
-	// Timers and Tickers
-	timersAndTickers()
+	// Timer & Ticker
+	timerNticker()
 
 	// WaitGroups
 	waitGroups()
